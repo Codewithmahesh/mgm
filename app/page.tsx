@@ -10,14 +10,23 @@ import PlacementHighlights from "@/components/placement-highlights"
 export default function HomePage() {
   return (
     <main className="min-h-screen">
-      <Hero />
-      <AboutPreview />
-      <StatsSection />
-      <CoursesPreview />
-      <PlacementHighlights />
-      <CampusLife />
-      <Testimonials />
-      <NewsEvents />
+      {/* Fixed Hero Section */}
+      <div className="sticky top-0 z-0">
+        <Hero />
+      </div>
+      <div className="sticky top-0 z-0">
+        <AboutPreview />
+      </div>
+      
+      {/* Scrollable Content - will overlay the hero when scrolling */}
+      <div className="relative z-10 bg-white">
+        <StatsSection />
+        <CoursesPreview />
+        <PlacementHighlights />
+        <CampusLife />
+        <Testimonials />
+        <NewsEvents />
+      </div>
     </main>
   )
 }

@@ -16,7 +16,7 @@ export default function Navbar() {
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center py-4">
           <Link href="/" className="flex items-center space-x-3">
-            <Image src="/images/mgm-logo.png" alt="MGM College Logo" width={360} height={360} className="rounded-lg" />
+            <Image src="/images/mgm-logo.png" alt="MGM College Logo" width={360} height={360} className="rounded-lg " />
             {/* <div className="hidden md:block">
                <h1 className="text-xl font-bold text-purple-900">MGM's College of Engineering</h1> 
                <p className="text-sm text-gray-600">Nanded</p> 
