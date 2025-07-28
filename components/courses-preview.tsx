@@ -86,25 +86,26 @@ export default function CoursesPreview() {
                   </div>
                 </div>
 
-                <Button
-                  variant="outline"
-                  className="mt-6 border-purple-300 text-purple-700 hover:bg-purple-50 bg-transparent"
-                >
-                  <Link
-                    href={`/academics/${
-                      course.name.toLowerCase().includes("computer")
-                        ? "computer-science"
-                        : course.name.toLowerCase().includes("artificial")
-                          ? "computer-science"
-                          : course.name.toLowerCase().includes("mechanical")
-                            ? "mechanical"
-                            : "civil"
+               <Button
+                variant="outline"
+                className="group flex items-center gap-2 border-2 border-purple-300 text-purple-700 bg-white px-5 py-2 rounded-3xl mt-5  hover:text-purple-700 hover:border-purple-700 transition duration-300"
+              >
+               <Link
+                href={`/academics/${
+                  course.name.toLowerCase().includes("computer")
+                    ? "computer-science"
+                    : course.name.toLowerCase().includes("artificial")
+                      ? "computer-science"
+                      : course.name.toLowerCase().includes("mechanical")
+                        ? "mechanical"
+                        : "civil"
                     }`}
-                  >
-                    Learn More
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
+                 className="flex items-center gap-2"
+                >
+                   Learn More
+                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                 </Link>
+               </Button>
               </CardContent>
             </Card>
           ))}

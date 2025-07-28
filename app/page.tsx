@@ -11,15 +11,13 @@ export default function HomePage() {
   return (
     <main className="min-h-screen">
       {/* Fixed Hero Section */}
-      <div className="sticky top-0 z-0">
+      <div className="sticky top-20 z-220">
         <Hero />
-      </div>
-      <div className="sticky top-0 z-0">
-        <AboutPreview />
       </div>
       
       {/* Scrollable Content - will overlay the hero when scrolling */}
       <div className="relative z-10 bg-white">
+        <AboutPreview />
         <StatsSection />
         <CoursesPreview />
         <PlacementHighlights />

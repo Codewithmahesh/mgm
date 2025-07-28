@@ -7,38 +7,38 @@ export default function CampusLife() {
       icon: <Trophy className="h-8 w-8 text-yellow-500" />,
       title: "Sports & Athletics",
       description: "Cricket, Football, Basketball, Tennis, and more",
-      image: "/placeholder.svg?height=200&width=300&text=Sports",
+      image: "/images/sports-home.jpg",
     },
     {
       icon: <Music className="h-8 w-8 text-pink-500" />,
       title: "Cultural Events",
       description: "Annual fest, music competitions, dance performances",
-      image: "/placeholder.svg?height=200&width=300&text=Cultural",
+      image: "/images/cultural-events-home.jpg",
     },
     {
       icon: <BookOpen className="h-8 w-8 text-blue-500" />,
       title: "Technical Clubs",
       description: "Coding clubs, robotics, innovation labs",
-      image: "/placeholder.svg?height=200&width=300&text=Technical",
+      image: "/images/technical-club-home.jpg",
     },
-    {
-      icon: <Camera className="h-8 w-8 text-green-500" />,
-      title: "Photography Club",
-      description: "Capture memories and develop creative skills",
-      image: "/placeholder.svg?height=200&width=300&text=Photography",
-    },
+    // {
+    //   icon: <Camera className="h-8 w-8 text-green-500" />,
+    //   title: "Photography Club",
+    //   description: "Capture memories and develop creative skills",
+    //   image: "/placeholder.svg?height=200&width=300&text=Photography",
+    // },
     {
       icon: <Users className="h-8 w-8 text-purple-500" />,
       title: "Student Council",
       description: "Leadership opportunities and student governance",
-      image: "/placeholder.svg?height=200&width=300&text=Council",
+      image: "/images/student-council-home.jpg",
     },
-    {
-      icon: <Gamepad2 className="h-8 w-8 text-red-500" />,
-      title: "Gaming Club",
-      description: "Esports tournaments and gaming competitions",
-      image: "/placeholder.svg?height=200&width=300&text=Gaming",
-    },
+    // {
+    //   icon: <Gamepad2 className="h-8 w-8 text-red-500" />,
+    //   title: "Gaming Club",
+    //   description: "Esports tournaments and gaming competitions",
+    //   image: "/placeholder.svg?height=200&width=300&text=Gaming",
+    // },
   ]
 
   return (
