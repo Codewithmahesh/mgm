@@ -85,27 +85,26 @@ export default function CoursesPreview() {
                     </div>
                   </div>
                 </div>
-
-               <Button
-                variant="outline"
-                className="group flex items-center gap-2 border-2 border-purple-300 text-purple-700 bg-white px-5 py-2 rounded-3xl mt-5  hover:text-purple-700 hover:border-purple-700 transition duration-300"
-              >
-               <Link
-                href={`/academics/${
-                  course.name.toLowerCase().includes("computer")
-                    ? "computer-science"
-                    : course.name.toLowerCase().includes("artificial")
+      
+                <Link
+                  href={`/academics/${
+                    course.name.toLowerCase().includes("computer")
                       ? "computer-science"
-                      : course.name.toLowerCase().includes("mechanical")
-                        ? "mechanical"
-                        : "civil"
-                    }`}
-                 className="flex items-center gap-2"
+                      : course.name.toLowerCase().includes("artificial")
+                        ? "computer-science"
+                        : course.name.toLowerCase().includes("mechanical")
+                          ? "mechanical"
+                          : "civil"
+                  }`}
                 >
-                   Learn More
-                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                 </Link>
-               </Button>
+                  <Button
+                    variant="outline"
+                    className="group flex w-full items-center gap-2 border-2 border-purple-300 text-purple-700 bg-white px-5 py-2 rounded-3xl mt-5 hover:text-purple-700 hover:border-purple-700 transition duration-300"
+                  >
+                    Learn More
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
           ))}

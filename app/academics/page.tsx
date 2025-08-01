@@ -1,11 +1,13 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Users, Clock } from "lucide-react"
+import Link from "next/link"
+
 
 export default function AcademicsPage() {
   const ugCourses = [
-    { name: "Civil Engineering", duration: "4 years", intake: "60", startYear: "1984" },
     { name: "Computer Science & Engineering", duration: "4 years", intake: "120", startYear: "1999" },
+    { name: "Civil Engineering", duration: "4 years", intake: "60", startYear: "1984" },
     { name: "Electronics & Telecommunication Engineering", duration: "4 years", intake: "60", startYear: "1984" },
     { name: "Information Technology", duration: "4 years", intake: "60", startYear: "2001" },
     { name: "Mechanical Engineering", duration: "4 years", intake: "120", startYear: "1984" },
@@ -35,7 +37,26 @@ export default function AcademicsPage() {
             <h2 className="text-3xl font-bold text-purple-800 mb-8 text-center">Undergraduate Programs (B.Tech)</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {ugCourses.map((course, index) => (
-                <Card
+                <Link href = {`/academics/${
+                  course.name.toLowerCase().includes("computer") 
+                    ? "computer-science" 
+                    : course.name.toLowerCase().includes("civil") 
+                      ? "civil" 
+                      : course.name.toLowerCase().includes("electronics")
+                        ? "electronics" 
+                        : course.name.toLowerCase().includes("information") 
+                          ? "information-technology" 
+                          : course.name.toLowerCase().includes("mechanical") 
+                            ? "mechanical" 
+                            : course.name.toLowerCase().includes("artificial") 
+                              ? "artificial-intelligence" 
+                              : course.name.toLowerCase().includes("automation") 
+                                ? "automation-robotics" 
+                                : "other"
+
+                }`}>
+
+                    <Card
                   key={index}
                   className="border-purple-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
                   style={{ animationDelay: `${index * 100}ms` }}
@@ -59,6 +80,8 @@ export default function AcademicsPage() {
                     </div>
                   </CardContent>
                 </Card>
+
+                </Link>
               ))}
             </div>
           </div>

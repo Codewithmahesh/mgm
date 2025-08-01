@@ -10,12 +10,9 @@ import PlacementHighlights from "@/components/placement-highlights"
 export default function HomePage() {
   return (
     <main className="min-h-screen">
-      {/* Fixed Hero Section */}
-      <div className="sticky top-20 z-220">
+    
         <Hero />
-      </div>
-      
-      {/* Scrollable Content - will overlay the hero when scrolling */}
+  
       <div className="relative z-10 bg-white">
         <AboutPreview />
         <StatsSection />
