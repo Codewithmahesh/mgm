@@ -278,12 +278,12 @@ export default function ComputerSciencePage() {
                       <span>+91-02462-224756</span>
                     </div>
                   </div>
-                  <div className=" mt-4 p-2 bg-blue-50 rounded-lg">
+                  {/* <div className=" mt-4 p-2 bg-blue-50 rounded-lg">
                     <p className="text-sm text-gray-700">
                       15+ years of experience in Computer Science education and research. Specializes in AI, Machine
                       Learning, and Data Science.
                     </p>
-                  </div>
+                  </div> */}
                 </CardContent>
               </Card>
 
