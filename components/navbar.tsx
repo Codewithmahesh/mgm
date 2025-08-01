@@ -78,25 +78,25 @@ export default function Navbar() {
                     All Programs
                   </Link>
                   <Link
-                    href="/academics#civil"
+                    href="/academics/civil"
                     className="block px-4 py-2 text-gray-700 hover:bg-purple-50 hover:text-purple-600"
                   >
                     Civil Engineering
                   </Link>
                   <Link
-                    href="/academics#cse"
+                    href="/academics/computer-science"
                     className="block px-4 py-2 text-gray-700 hover:bg-purple-50 hover:text-purple-600"
                   >
                     Computer Science
                   </Link>
                   <Link
-                    href="/academics#mechanical"
+                    href="/academics/mechanical"
                     className="block px-4 py-2 text-gray-700 hover:bg-purple-50 hover:text-purple-600"
                   >
                     Mechanical Engineering
                   </Link>
                   <Link
-                    href="/academics#etc"
+                    href="/academics/electronics"
                     className="block px-4 py-2 text-gray-700 hover:bg-purple-50 hover:text-purple-600"
                   >
                     Electronics & Telecom
