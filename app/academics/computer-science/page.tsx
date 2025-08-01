@@ -20,6 +20,7 @@ import {
 import Image from "next/image"
 import { useState } from "react"
 import EditableWrapper from "@/components/editable-wrapper"
+import Link from "next/link"
 
 export default function ComputerSciencePage() {
   const courseHighlights = [
@@ -374,10 +375,12 @@ export default function ComputerSciencePage() {
                   <CardTitle className="text-xl">Quick Actions</CardTitle>
                 </CardHeader>
                 <CardContent className="p-6 space-y-3">
-                  <Button className="w-full bg-blue-600 hover:bg-blue-700">Download Syllabus</Button>
-                  <Button variant="outline" className="w-full border-blue-300 text-blue-700 bg-transparent">
+                  <Button className="w-full bg-blue-600 mb-3 hover:bg-blue-700">Download Syllabus</Button>
+                <Link href={"/academics/computer-science/faculty"}>
+                      <Button variant="outline" className="w-full border-blue-300 text-blue-700 bg-transparent">
                     View Faculty
                   </Button>
+                </Link>
                 </CardContent>
               </Card>
             </Card>
