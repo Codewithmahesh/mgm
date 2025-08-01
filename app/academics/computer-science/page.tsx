@@ -18,6 +18,7 @@ import {
   ChevronDown,
 } from "lucide-react"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import Link from "next/link"
 import Image from "next/image"
 import { useState } from "react"
 
@@ -102,22 +103,49 @@ export default function ComputerSciencePage() {
     const listClass = ordered ? "list-decimal" : "list-disc"
 
     return (
-      <Collapsible open={open} onOpenChange={setOpen}>
-        <CollapsibleTrigger className="w-full flex justify-between items-center py-2 text-left text-blue-800 font-semibold">
-          <span>{title}</span>
-          <ChevronDown className={`transition-transform ${open ? "rotate-180" : ""}`} />
-        </CollapsibleTrigger>
-        <CollapsibleContent>
-          <ListTag className={`${listClass} list-inside space-y-2 text-gray-700 text-justify mb-4`}>
-            {items.map((item, index) => (
-              <li key={index}>{item}</li>
-            ))}
-          </ListTag>
-        </CollapsibleContent>
-      </Collapsible>
+      <div className="border-b border-gray-300 last:border-b-0">
+        <button 
+          onClick={() => setOpen(!open)}
+          className="w-full flex justify-between items-center py-4 text-left text-blue-800 font-semibold
+           hover:text-blue-900 transition-colors duration-200 focus:outline-none rounded-lg px-2"
+        >
+          <span className="text-lg">{title}</span>
+          <ChevronDown 
+            className={`w-5 h-5 transition-transform duration-300 ease-in-out ${
+              open ? "rotate-180" : ""
+            }`} 
+          />
+        </button>
+        <div 
+          className={`overflow-hidden transition-all duration-500 ease-in-out ${
+            open ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0"
+          }`}
+        >
+          <div className={`pb-4 transform transition-transform duration-300 ease-in-out ${
+            open ? "translate-y-0" : "-translate-y-2"
+          }`}>
+            <ListTag className={`${listClass} list-inside space-y-3 text-gray-700 text-justify px-2`}>
+              {items.map((item, index) => (
+                <li 
+                  key={index} 
+                  className={`transform transition-all duration-300 ease-in-out ${
+                    open 
+                      ? "translate-x-0 opacity-100" 
+                      : "translate-x-4 opacity-0"
+                  }`}
+                  style={{ 
+                    transitionDelay: open ? `${index * 50}ms` : '0ms' 
+                  }}
+                >
+                  {item}
+                </li>
+              ))}
+            </ListTag>
+          </div>
+        </div>
+      </div>
     )
   }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white py-12">
       <div className="container mx-auto px-4">
@@ -252,7 +280,7 @@ export default function ComputerSciencePage() {
                       <span>+91-02462-224756</span>
                     </div>
                   </div>
-                  <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+                  <div className=" mt-4 p-2 bg-blue-50 rounded-lg">
                     <p className="text-sm text-gray-700">
                       15+ years of experience in Computer Science education and research. Specializes in AI, Machine
                       Learning, and Data Science.
