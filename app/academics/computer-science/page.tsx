@@ -19,6 +19,7 @@ import {
 } from "lucide-react"
 import Image from "next/image"
 import { useState } from "react"
+import EditableWrapper from "@/components/editable-wrapper"
 
 export default function ComputerSciencePage() {
   const courseHighlights = [
@@ -144,54 +145,111 @@ export default function ComputerSciencePage() {
       </div>
     )
   }
+
+  const [content, setContent] = useState<{
+    title: string
+    subtitle: string
+    duration: string
+    intake: string
+    established: string
+    description: string
+    careers: string[] | string
+    facilities: string[] | string
+  }>({
+    title: "Computer Science & Engineering",
+    subtitle: "Shaping the future through innovative technology and computational thinking",
+    duration: "4 Years",
+    intake: "120",
+    established: "1984",
+    description: "The Computer Science & Engineering Department at MGM's College of Engineering is dedicated to providing a comprehensive education in computer science, preparing students for successful careers in technology and engineering. Our curriculum emphasizes both theoretical foundations and practical applications, ensuring graduates are well-equipped to meet the challenges of the industry.",
+    careers: careerOpportunities,
+    facilities: facilities,
+  })
+
+  const handleSave = (newContent: any) => {
+    setContent((prev) => ({ ...prev, ...newContent }))
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white py-12">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12 animate-fade-in">
-          <h1 className="text-4xl md:text-5xl font-bold text-blue-900 mb-4">Computer Science & Engineering</h1>
+          
+          <EditableWrapper
+            id="dept-title"
+            editableContent={{
+              title: content.title,
+            }}
+            onSave={handleSave}      
+           >
+           <h1 className="text-4xl md:text-5xl font-bold text-blue-900 mb-4">
+              {content.title}
+           </h1>
+         </EditableWrapper>
+
+          
+          <EditableWrapper id="dept-subtitle" 
+            editableContent={{
+              subtitle: content.subtitle,
+            }}
+            onSave={handleSave}
+          >
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Shaping the future through innovative technology and computational thinking
+            {content.subtitle}
           </p>
+          </EditableWrapper>
+           
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8 mb-12">
           {/* Left Column */}
           <div className="lg:col-span-2 space-y-8">
+          
             {/* Overview */}
-            <Card className="border-blue-200 shadow-lg animate-slide-up">
-              <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-700 text-white">
-                <CardTitle className="text-2xl flex items-center">
-                  <BookOpen className="mr-3 h-6 w-6" />
-                  Course Overview
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
-                <div className="grid md:grid-cols-3 gap-6 mb-7">
-                  <div className="text-center">
-                    <Clock className="h-8 w-8 text-blue-600 mx-auto mb-2" />
-                    <div className="text-2xl font-bold text-blue-800">4 Years</div>
-                    <div className="text-sm text-gray-600">Duration</div>
+           
+            <EditableWrapper 
+              id="dept-overview"
+              editableContent={{
+                sectionTitle: "Course Overview",
+                duration: content.duration || "4 Years",
+                intake: content.intake || "120",
+                established: content.established || "1984",
+                description: content.description || "The Computer Science & Engineering Department at MGM's College of Engineering...",
+              }}
+              onSave={handleSave}
+            >
+              <Card className="border-blue-200 shadow-lg animate-slide-up">
+                <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-700 text-white">
+                  <CardTitle className="text-2xl flex items-center">
+                    <BookOpen className="mr-3 h-6 w-6" />
+                    Course Overview
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="grid md:grid-cols-3 gap-6 mb-7">
+                    <div className="text-center">
+                      <Clock className="h-8 w-8 text-blue-600 mx-auto mb-2" />
+                      <div className="text-2xl font-bold text-blue-800">{content.duration}</div>
+                      <div className="text-sm text-gray-600">Duration</div>
+                    </div>
+                    <div className="text-center">
+                      <Users className="h-8 w-8 text-blue-600 mx-auto mb-2" />
+                      <div className="text-2xl font-bold text-blue-800">{content.intake}</div>
+                      <div className="text-sm text-gray-600">Intake</div>
+                    </div>
+                    <div className="text-center">
+                      <Award className="h-8 w-8 text-blue-600 mx-auto mb-2" />
+                      <div className="text-2xl font-bold text-blue-800">{content.established}</div>
+                      <div className="text-sm text-gray-600">Established</div>
+                    </div>
                   </div>
-                  <div className="text-center">
-                    <Users className="h-8 w-8 text-blue-600 mx-auto mb-2" />
-                    <div className="text-2xl font-bold text-blue-800">120</div>
-                    <div className="text-sm text-gray-600">Intake</div>
-                  </div>
-                  <div className="text-center">
-                    <Award className="h-8 w-8 text-blue-600 mx-auto mb-2" />
-                    <div className="text-2xl font-bold text-blue-800">1984</div>
-                    <div className="text-sm text-gray-600">Established</div>
-                  </div>
-                </div>
-                <p className="text-gray-700 leading-relaxed text-justify">
-                  The Computer Science & Engineering Department at MGM's College of Engineering,
-                  established in 1984, offers quality UG, PG, and Ph.D. programs. It has received ₹59.99 lakh
-                  in research grants from BARC, AICTE, and AMUPMDC. Recognized research center under SRTMU
-                  Nanded and DBATU Lonere. Modern infrastructure and industry collaborations prepare students
-                  for success in the evolving tech landscape.
-                </p>
-              </CardContent>
-            </Card>
+                  <p className="text-gray-700 leading-relaxed text-justify">
+                    {content.description}
+                  </p>
+                </CardContent>
+              </Card>
+            </EditableWrapper>
+
 
             {/* Vision & Mission Collapsibles */}
             <Card className="border-blue-200 shadow-lg animate-slide-up animation-delay-200">
@@ -212,38 +270,67 @@ export default function ComputerSciencePage() {
             </Card>
 
             {/* Career Opportunities */}
-            <Card className="border-blue-200 shadow-lg animate-slide-up animation-delay-400">
-              <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-700 text-white">
-                <CardTitle className="text-2xl">Career Opportunities</CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
-                <div className="grid md:grid-cols-2 gap-4">
-                  {careerOpportunities.map((career, index) => (
-                    <div key={index} className="flex items-center p-3 bg-blue-50 rounded-lg">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
-                      <span className="text-gray-700">{career}</span>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+
+             <EditableWrapper 
+               id="dept-career-opportunities"
+               editableContent={{
+                 careers: Array.isArray(content.careers)
+                   ? content.careers.join(",")
+                   : content.careers || careerOpportunities.join(","),
+               }}
+               onSave={handleSave}
+             >
+               <Card className="border-blue-200 shadow-lg animate-slide-up animation-delay-400">
+                 <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-700 text-white">
+                   <CardTitle className="text-2xl">Career Opportunities</CardTitle>
+                 </CardHeader>
+                 <CardContent className="p-6">
+                   <div className="grid md:grid-cols-2 gap-4">
+                     {(typeof content.careers === "string" 
+                       ? content.careers.split(",") 
+                       : content.careers || careerOpportunities
+                     ).map((career: string, index: number) => (
+                       <div key={index} className="flex items-center p-3 bg-blue-50 rounded-lg">
+                         <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
+                         <span className="text-gray-700">{career.trim()}</span>
+                       </div>
+                     ))}
+                   </div>
+                 </CardContent>
+               </Card>
+             </EditableWrapper>
 
             {/* Facilities */}
-            <Card className="border-blue-200 shadow-lg animate-slide-up animation-delay-600">
-              <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-700 text-white">
-                <CardTitle className="text-2xl">Facilities</CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
-                <ul className="space-y-3">
-                  {facilities.map((facility, index) => (
-                    <li key={index} className="flex items-start">
-                      <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                      <span className="text-gray-700">{facility}</span>
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
-            </Card>
+            <EditableWrapper 
+              id="dept-facilities"
+              editableContent={{
+                facilities: Array.isArray(content.facilities)
+                  ? content.facilities.join(",")
+                  : content.facilities || facilities.join(","),
+              }}
+              onSave={handleSave}
+            >
+              <Card className="border-green-200 shadow-lg animate-slide-up animation-delay-400">
+                <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-700 text-white">
+                  <CardTitle className="text-2xl">Facilities</CardTitle>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="grid md:grid-cols-2 gap-4">
+                    {(typeof content.facilities === "string"
+                      ? content.facilities.split(",")
+                      : content.facilities || facilities
+                    ).map((facility: string, index: number) => (
+                      <div key={index} className="flex items-center p-3 bg-green-50 rounded-lg">
+                        <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
+                        <span className="text-gray-700">{facility.trim()}</span>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </EditableWrapper>
+
+
           </div>
 
           {/* Right Column - HOD + Actions */}
@@ -278,12 +365,7 @@ export default function ComputerSciencePage() {
                       <span>+91-02462-224756</span>
                     </div>
                   </div>
-                  {/* <div className=" mt-4 p-2 bg-blue-50 rounded-lg">
-                    <p className="text-sm text-gray-700">
-                      15+ years of experience in Computer Science education and research. Specializes in AI, Machine
-                      Learning, and Data Science.
-                    </p>
-                  </div> */}
+                 
                 </CardContent>
               </Card>
 

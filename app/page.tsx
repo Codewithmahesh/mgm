@@ -9,11 +9,8 @@ import PlacementHighlights from "@/components/placement-highlights"
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen">
-    
+    <main className="min-h-screen"> 
         <Hero />
-  
-      <div className="relative z-10 bg-white">
         <AboutPreview />
         <StatsSection />
         <CoursesPreview />
@@ -21,7 +18,6 @@ export default function HomePage() {
         <CampusLife />
         <Testimonials />
         <NewsEvents />
-      </div>
     </main>
   )
 }
