@@ -17,8 +17,6 @@ import {
   Phone,
   ChevronDown,
 } from "lucide-react"
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-import Link from "next/link"
 import Image from "next/image"
 import { useState } from "react"
 
@@ -103,7 +101,7 @@ export default function ComputerSciencePage() {
     const listClass = ordered ? "list-decimal" : "list-disc"
 
     return (
-      <div className="border-b border-gray-300 last:border-b-0">
+      <div className="border-b border-gray-200 last:border-b-0">
         <button 
           onClick={() => setOpen(!open)}
           className="w-full flex justify-between items-center py-4 text-left text-blue-800 font-semibold
