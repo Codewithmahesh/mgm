@@ -74,9 +74,15 @@ export default function AcademicsPage() {
                         <Users className="w-4 h-4 mr-2 text-purple-500" />
                         <span>Intake: {course.intake}</span>
                       </div>
-                      <Badge variant="outline" className="border-purple-300 text-purple-700">
+                     <div className="flex items-center justify-between">
+                       <Badge variant="outline" className="border-purple-300 text-purple-700">
                         Since {course.startYear}
                       </Badge>
+                      <button className="text-white bg-purple-600 hover:bg-purple-700 border-2 border-purple-600 hover:border-purple-700 
+                        font-normal px-4 py-2 rounded-md transition-colors duration-200">
+                        View Details
+                      </button>
+                     </div>
                     </div>
                   </CardContent>
                 </Card>
