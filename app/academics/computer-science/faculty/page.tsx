@@ -2,14 +2,34 @@
 
 import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Mail, Phone, User, BookOpen, Award, GraduationCap, Calendar, MapPin } from "lucide-react"
+import { User, BookOpen, Award, GraduationCap, Plus } from "lucide-react"
 import Link from "next/link"
-import EditableWrapper from "@/components/editable-wrapper"
 import FadeInSection from "@/components/fade-in-section"
+import { useEditMode } from "@/components/edit-mode-provider"
+import FacultyCard from "@/components/faculty-card"
+import FacultyFormDialog from "@/components/faculty-form-dialog"
+
+interface Faculty {
+  id: string
+  name: string
+  designation: string
+  qualification: string
+  experience: string
+  specialization: string[]
+  email: string
+  phone: string
+  publications: string
+  projects: string
+  image: string
+  achievements: string[]
+}
 
 export default function CSEFacultyPage() {
+  const { isEditMode } = useEditMode()
+  const [isAddFacultyOpen, setIsAddFacultyOpen] = useState(false)
+  const [editingFaculty, setEditingFaculty] = useState<Faculty | null>(null)
+
   const [pageContent, setPageContent] = useState({
     title: "Computer Science & Engineering Faculty",
     subtitle:
@@ -24,19 +44,19 @@ export default function CSEFacultyPage() {
     { label: "Active Projects", value: "43", icon: <Award className="h-6 w-6" /> },
   ])
 
-  const [facultyMembers, setFacultyMembers] = useState([
+  const [facultyMembers, setFacultyMembers] = useState<Faculty[]>([
     {
       id: "faculty-1",
-      name: "Dr. Rajesh Kumar",
+      name: "Dr. Rajurkar A.M.",
       designation: "Head of Department & Professor",
       qualification: "Ph.D. in Computer Science, M.Tech CSE, B.Tech CSE",
       experience: "15+ years",
-      specialization: ["Artificial Intelligence", "Machine Learning", "Data Science", "Deep Learning"],
-      email: "rajesh.kumar@mgmcen.ac.in",
-      phone: "+91-9876-543210",
+      specialization: ["Artificial Intelligence", "Machine Learning", "Image Processing & Computer Vision"],
+      email: "rajurkar_am@mgmce.ac.in",
+      phone: "+91-02462-224756",
       publications: "45+ Research Papers",
       projects: "12 Funded Projects",
-      image: "/placeholder.svg?height=200&width=200&text=Dr.RK",
+      image: "/images/computer-department/hod-image.jpg",
       achievements: ["Best Teacher Award 2023", "Research Excellence Award 2022", "IEEE Senior Member"],
     },
     {
@@ -160,31 +180,63 @@ export default function CSEFacultyPage() {
     departmentHighlightsTitle: "Department Highlights",
   })
 
-  const handlePageContentSave = (newContent: { [key: string]: string }) => {
-    setPageContent((prev) => ({ ...prev, ...newContent }))
-  }
-
-  const handleFacultySave = (facultyId: string, newContent: { [key: string]: string }) => {
-    setFacultyMembers((prev) =>
-      prev.map((faculty) =>
-        faculty.id === facultyId
-          ? {
-              ...faculty,
-              ...newContent,
-              specialization: newContent.specialization
-                ? newContent.specialization.split(",").map((s) => s.trim())
-                : faculty.specialization,
-              achievements: newContent.achievements
-                ? newContent.achievements.split(",").map((s) => s.trim())
-                : faculty.achievements,
-            }
-          : faculty,
-      ),
+  const handleAddFaculty = (faculty: Faculty) => {
+    setFacultyMembers([faculty, ...facultyMembers])
+    // Update stats
+    setDepartmentStats((prev) =>
+      prev.map((stat) => {
+        if (stat.label === "Total Faculty") {
+          return { ...stat, value: (facultyMembers.length + 1).toString() }
+        }
+        if (stat.label === "Ph.D. Holders" && faculty.qualification.includes("Ph.D.")) {
+          const currentPhD = Number.parseInt(stat.value) || 0
+          return { ...stat, value: (currentPhD + 1).toString() }
+        }
+        return stat
+      }),
     )
   }
 
-  const handleStatSave = (index: number, newContent: { [key: string]: string }) => {
-    setDepartmentStats((prev) => prev.map((stat, i) => (i === index ? { ...stat, ...newContent } : stat)))
+  const handleEditFaculty = (faculty: Faculty) => {
+    setEditingFaculty(faculty)
+    setIsAddFacultyOpen(true)
+  }
+
+  const handleUpdateFaculty = (updatedFaculty: Faculty) => {
+    setFacultyMembers((prev) => prev.map((f) => (f.id === updatedFaculty.id ? updatedFaculty : f)))
+    setEditingFaculty(null)
+  }
+
+  const handleDeleteFaculty = (id: string) => {
+    const facultyToDelete = facultyMembers.find((f) => f.id === id)
+    setFacultyMembers((prev) => prev.filter((f) => f.id !== id))
+
+    // Update stats
+    setDepartmentStats((prev) =>
+      prev.map((stat) => {
+        if (stat.label === "Total Faculty") {
+          return { ...stat, value: (facultyMembers.length - 1).toString() }
+        }
+        if (stat.label === "Ph.D. Holders" && facultyToDelete?.qualification.includes("Ph.D.")) {
+          const currentPhD = Number.parseInt(stat.value) || 0
+          return { ...stat, value: Math.max(0, currentPhD - 1).toString() }
+        }
+        return stat
+      }),
+    )
+  }
+
+  const handleFacultyFormSave = (faculty: Faculty) => {
+    if (editingFaculty) {
+      handleUpdateFaculty(faculty)
+    } else {
+      handleAddFaculty(faculty)
+    }
+  }
+
+  const handleFormClose = () => {
+    setIsAddFacultyOpen(false)
+    setEditingFaculty(null)
   }
 
   const researchAreas = [
@@ -216,26 +268,17 @@ export default function CSEFacultyPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white py-12 overflow-hidden">
       <div className="container mx-auto px-4">
-        {/* Header with Floating Animation */}
+        {/* Header with Add Faculty Button */}
         <FadeInSection className="text-center mb-12">
-          <EditableWrapper
-            id="faculty-page-header"
-            editableContent={{
-              title: pageContent.title,
-              subtitle: pageContent.subtitle,
-            }}
-            onSave={handlePageContentSave}
-          >
-            <div className="animate-float">
-              <h1 className="text-4xl md:text-5xl font-bold text-blue-900 mb-4 animate-gradient-text">
-                {pageContent.title}
-              </h1>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto animate-fade-in-up animation-delay-200">
-                {pageContent.subtitle}
-              </p>
-            </div>
-          </EditableWrapper>
-          <div className="mt-6 animate-bounce-in animation-delay-400">
+          <div className="animate-float">
+            <h1 className="text-4xl md:text-5xl font-bold text-blue-900 mb-4 animate-gradient-text">
+              {pageContent.title}
+            </h1>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto animate-fade-in-up animation-delay-200">
+              {pageContent.subtitle}
+            </p>
+          </div>
+          <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-4 animate-bounce-in animation-delay-400">
             <Button
               variant="outline"
               className="border-blue-300 text-blue-700 bg-transparent hover:scale-105 transition-transform duration-300"
@@ -244,236 +287,110 @@ export default function CSEFacultyPage() {
                 {pageContent.backButtonText}
               </Link>
             </Button>
+            {isEditMode && (
+              <Button
+                onClick={() => setIsAddFacultyOpen(true)}
+                className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+              >
+                <Plus className="mr-2 h-5 w-5" />
+                Add Faculty Member
+              </Button>
+            )}
           </div>
         </FadeInSection>
 
-        {/* Department Statistics with Stagger Animation */}
+        {/* Department Statistics */}
         <FadeInSection delay={0.2} className="mb-12">
           <div className="grid md:grid-cols-4 gap-6">
             {departmentStats.map((stat, index) => (
-              <EditableWrapper
+              <Card
                 key={index}
-                id={`stat-${index}`}
-                editableContent={{
-                  label: stat.label,
-                  value: stat.value,
-                }}
-                onSave={(newContent) => handleStatSave(index, newContent)}
+                className="border-blue-200 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 hover:rotate-1 animate-scale-in group"
               >
-                <Card className="border-blue-200 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 hover:rotate-1 animate-scale-in group">
-                  <CardContent className="p-6 text-center">
-                    <div className="flex justify-center mb-3 text-blue-600 group-hover:scale-110 transition-transform duration-300">
-                      {stat.icon}
-                    </div>
-                    <div className="text-2xl font-bold text-blue-800 mb-1 animate-counter" data-target={stat.value}>
-                      {stat.value}
-                    </div>
-                    <div className="text-sm text-gray-600">{stat.label}</div>
-                  </CardContent>
-                </Card>
-              </EditableWrapper>
+                <CardContent className="p-6 text-center">
+                  <div className="flex justify-center mb-3 text-blue-600 group-hover:scale-110 transition-transform duration-300">
+                    {stat.icon}
+                  </div>
+                  <div className="text-2xl font-bold text-blue-800 mb-1 animate-counter" data-target={stat.value}>
+                    {stat.value}
+                  </div>
+                  <div className="text-sm text-gray-600">{stat.label}</div>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </FadeInSection>
 
-        {/* Faculty Grid with Staggered Animations */}
+        {/* Faculty Grid */}
         <FadeInSection delay={0.4} className="mb-12">
           <div className="grid lg:grid-cols-2 gap-8">
             {facultyMembers.map((faculty, index) => (
-              <EditableWrapper
+              <FacultyCard
                 key={faculty.id}
-                id={faculty.id}
-                editableContent={{
-                  name: faculty.name,
-                  designation: faculty.designation,
-                  qualification: faculty.qualification,
-                  experience: faculty.experience,
-                  specialization: faculty.specialization.join(", "),
-                  email: faculty.email,
-                  phone: faculty.phone,
-                  publications: faculty.publications,
-                  projects: faculty.projects,
-                  achievements: faculty.achievements.join(", "),
-                }}
-                onSave={(newContent) => handleFacultySave(faculty.id, newContent)}
-              >
-                <Card className="border-blue-200 shadow-lg hover:shadow-2xl transition-all duration-700 transform hover:-translate-y-3 hover:scale-105 animate-slide-in-stagger group">
-                  <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-700 text-white relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-500 opacity-0 group-hover:opacity-20 transition-opacity duration-500"></div>
-                    <div className="flex items-start space-x-4 relative z-10">
-                      <div className="relative">
-                        <img
-                          src={faculty.image || "/placeholder.svg"}
-                          alt={faculty.name}
-                          className="w-20 h-20 rounded-full border-4 border-white object-cover group-hover:scale-110 transition-transform duration-500 animate-profile-float"
-                        />
-                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 opacity-0 group-hover:opacity-30 transition-opacity duration-500"></div>
-                      </div>
-                      <div className="flex-1">
-                        <CardTitle className="text-xl mb-1 group-hover:text-yellow-200 transition-colors duration-300">
-                          {faculty.name}
-                        </CardTitle>
-                        <p className="text-blue-100 text-sm font-medium animate-fade-in-right animation-delay-200">
-                          {faculty.designation}
-                        </p>
-                        <div className="flex items-center mt-2 text-blue-100 text-sm animate-fade-in-right animation-delay-400">
-                          <Calendar className="w-4 h-4 mr-1" />
-                          {faculty.experience}
-                        </div>
-                      </div>
-                    </div>
-                  </CardHeader>
-
-                  <CardContent className="p-6 relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-100 to-transparent rounded-full -translate-y-16 translate-x-16 opacity-50"></div>
-                    <div className="space-y-4 relative z-10">
-                      {/* Qualification */}
-                      <div className="animate-fade-in-up animation-delay-200">
-                        <h4 className="font-semibold text-blue-800 mb-2 flex items-center">
-                          <GraduationCap className="w-4 h-4 mr-2 animate-bounce-subtle" />
-                          Qualification
-                        </h4>
-                        <p className="text-gray-700 text-sm">{faculty.qualification}</p>
-                      </div>
-
-                      {/* Specialization */}
-                      <div className="animate-fade-in-up animation-delay-400">
-                        <h4 className="font-semibold text-blue-800 mb-2">Areas of Specialization</h4>
-                        <div className="flex flex-wrap gap-2">
-                          {faculty.specialization.map((area, idx) => (
-                            <Badge
-                              key={idx}
-                              variant="outline"
-                              className="border-blue-300 text-blue-700 hover:bg-blue-100 transition-all duration-300 hover:scale-105 animate-badge-float"
-                              style={{ animationDelay: `${idx * 100}ms` }}
-                            >
-                              {area}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Research & Projects */}
-                      <div className="grid md:grid-cols-2 gap-4 animate-fade-in-up animation-delay-600">
-                        <div className="flex items-center text-sm text-gray-600 hover:text-blue-600 transition-colors duration-300">
-                          <BookOpen className="w-4 h-4 mr-2 text-blue-600 animate-pulse-subtle" />
-                          {faculty.publications}
-                        </div>
-                        <div className="flex items-center text-sm text-gray-600 hover:text-blue-600 transition-colors duration-300">
-                          <Award className="w-4 h-4 mr-2 text-blue-600 animate-pulse-subtle animation-delay-200" />
-                          {faculty.projects}
-                        </div>
-                      </div>
-
-                      {/* Achievements */}
-                      <div className="animate-fade-in-up animation-delay-800">
-                        <h4 className="font-semibold text-blue-800 mb-2">Key Achievements</h4>
-                        <ul className="space-y-1">
-                          {faculty.achievements.map((achievement, idx) => (
-                            <li
-                              key={idx}
-                              className="text-sm text-gray-700 flex items-start hover:text-blue-700 transition-colors duration-300 animate-slide-in-left"
-                              style={{ animationDelay: `${800 + idx * 100}ms` }}
-                            >
-                              <span className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-2 mr-2 flex-shrink-0 animate-pulse"></span>
-                              {achievement}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      {/* Contact Information */}
-                      <div className="border-t pt-4 animate-fade-in-up animation-delay-1000">
-                        <h4 className="font-semibold text-blue-800 mb-2">Contact Information</h4>
-                        <div className="space-y-2">
-                          <div className="flex items-center text-sm text-gray-600 hover:text-blue-600 transition-all duration-300 hover:translate-x-2">
-                            <Mail className="w-4 h-4 mr-2 text-blue-600" />
-                            <a href={`mailto:${faculty.email}`} className="hover:underline">
-                              {faculty.email}
-                            </a>
-                          </div>
-                          <div className="flex items-center text-sm text-gray-600 hover:text-blue-600 transition-all duration-300 hover:translate-x-2">
-                            <Phone className="w-4 h-4 mr-2 text-blue-600" />
-                            <a href={`tel:${faculty.phone}`} className="hover:underline">
-                              {faculty.phone}
-                            </a>
-                          </div>
-                          <div className="flex items-center text-sm text-gray-600 hover:text-blue-600 transition-all duration-300 hover:translate-x-2">
-                            <MapPin className="w-4 h-4 mr-2 text-blue-600" />
-                            CSE Department, MGM College
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </EditableWrapper>
+                faculty={faculty}
+                index={index}
+                onEdit={handleEditFaculty}
+                onDelete={handleDeleteFaculty}
+              />
             ))}
           </div>
         </FadeInSection>
 
-        {/* Additional Information with Parallax Effect */}
+        {/* Additional Information */}
         <FadeInSection delay={0.8} className="mt-12">
           <div className="grid lg:grid-cols-2 gap-8">
-            <EditableWrapper
-              id="research-areas-section"
-              editableContent={{
-                researchAreasTitle: additionalContent.researchAreasTitle,
-              }}
-              onSave={(newContent) => setAdditionalContent((prev) => ({ ...prev, ...newContent }))}
-            >
-              <Card className="border-blue-200 shadow-lg hover:shadow-2xl transition-all duration-700 transform hover:-translate-y-2 animate-slide-in-left">
-                <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-700 text-white relative overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 opacity-0 hover:opacity-20 transition-opacity duration-500"></div>
-                  <CardTitle className="text-xl relative z-10">{additionalContent.researchAreasTitle}</CardTitle>
-                </CardHeader>
-                <CardContent className="p-6">
-                  <div className="grid grid-cols-2 gap-3">
-                    {researchAreas.map((area, index) => (
-                      <div
-                        key={index}
-                        className="flex items-center p-2 bg-blue-50 rounded-lg hover:bg-blue-100 transition-all duration-300 hover:scale-105 animate-fade-in-up"
-                        style={{ animationDelay: `${index * 50}ms` }}
-                      >
-                        <div className="w-2 h-2 bg-blue-500 rounded-full mr-2 animate-pulse"></div>
-                        <span className="text-sm text-gray-700">{area}</span>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </EditableWrapper>
+            <Card className="border-blue-200 shadow-lg hover:shadow-2xl transition-all duration-700 transform hover:-translate-y-2 animate-slide-in-left">
+              <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-700 text-white relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 opacity-0 hover:opacity-20 transition-opacity duration-500"></div>
+                <CardTitle className="text-xl relative z-10">{additionalContent.researchAreasTitle}</CardTitle>
+              </CardHeader>
+              <CardContent className="p-6">
+                <div className="grid grid-cols-2 gap-3">
+                  {researchAreas.map((area, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center p-2 bg-blue-50 rounded-lg hover:bg-blue-100 transition-all duration-300 hover:scale-105 animate-fade-in-up"
+                      style={{ animationDelay: `${index * 50}ms` }}
+                    >
+                      <div className="w-2 h-2 bg-blue-500 rounded-full mr-2 animate-pulse"></div>
+                      <span className="text-sm text-gray-700">{area}</span>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
 
-            <EditableWrapper
-              id="department-highlights-section"
-              editableContent={{
-                departmentHighlightsTitle: additionalContent.departmentHighlightsTitle,
-              }}
-              onSave={(newContent) => setAdditionalContent((prev) => ({ ...prev, ...newContent }))}
-            >
-              <Card className="border-blue-200 shadow-lg hover:shadow-2xl transition-all duration-700 transform hover:-translate-y-2 animate-slide-in-right">
-                <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-700 text-white relative overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-r from-green-600 to-teal-600 opacity-0 hover:opacity-20 transition-opacity duration-500"></div>
-                  <CardTitle className="text-xl relative z-10">{additionalContent.departmentHighlightsTitle}</CardTitle>
-                </CardHeader>
-                <CardContent className="p-6">
-                  <ul className="space-y-3">
-                    {departmentHighlights.map((highlight, index) => (
-                      <li
-                        key={index}
-                        className="flex items-start hover:bg-blue-50 p-2 rounded-lg transition-all duration-300 hover:translate-x-2 animate-slide-in-left"
-                        style={{ animationDelay: `${index * 100}ms` }}
-                      >
-                        <Award className="w-4 h-4 text-blue-600 mt-0.5 mr-3 flex-shrink-0 animate-bounce-subtle" />
-                        <span className="text-gray-700 text-sm">{highlight}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            </EditableWrapper>
+            <Card className="border-blue-200 shadow-lg hover:shadow-2xl transition-all duration-700 transform hover:-translate-y-2 animate-slide-in-right">
+              <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-700 text-white relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-r from-green-600 to-teal-600 opacity-0 hover:opacity-20 transition-opacity duration-500"></div>
+                <CardTitle className="text-xl relative z-10">{additionalContent.departmentHighlightsTitle}</CardTitle>
+              </CardHeader>
+              <CardContent className="p-6">
+                <ul className="space-y-3">
+                  {departmentHighlights.map((highlight, index) => (
+                    <li
+                      key={index}
+                      className="flex items-start hover:bg-blue-50 p-2 rounded-lg transition-all duration-300 hover:translate-x-2 animate-slide-in-left"
+                      style={{ animationDelay: `${index * 100}ms` }}
+                    >
+                      <Award className="w-4 h-4 text-blue-600 mt-0.5 mr-3 flex-shrink-0 animate-bounce-subtle" />
+                      <span className="text-gray-700 text-sm">{highlight}</span>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
           </div>
         </FadeInSection>
+
+        {/* Faculty Form Dialog */}
+        <FacultyFormDialog
+          isOpen={isAddFacultyOpen}
+          onOpenChange={handleFormClose}
+          onSave={handleFacultyFormSave}
+          editingFaculty={editingFaculty}
+          title={editingFaculty ? "Edit Faculty Member" : "Add New Faculty Member"}
+        />
       </div>
     </div>
   )

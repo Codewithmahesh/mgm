@@ -9,11 +9,8 @@ export default function Footer() {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="space-y-4">
             <div className="flex items-center space-x-3">
-              <Image src="/images/mgm-logo.png" alt="MGM College Logo" width={50} height={50} className="rounded-lg" />
-              <div>
-                <h3 className="text-xl font-bold">MGM's College</h3>
-                <p className="text-sm text-gray-400">of Engineering</p>
-              </div>
+              <Image src="/images/mgm-logo.png" alt="MGM College Logo" width={260} height={360} className="rounded-lg " />
+            
             </div>
             <p className="text-gray-400 text-sm">
               Affiliated to Dr. BATU, Lonere • Accredited by NAAC(2024) • NBA Accredited(2024-2027) • Approved by AICTE,
